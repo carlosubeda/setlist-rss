@@ -23,7 +23,8 @@ def fetch_all():
     # Wicket pagination links depend on cookies and on the current page version.
     session = requests.Session()
     session.headers.update({'User-Agent': 'personal-attended-rss/2.0',
-                            'Accept-Language': 'en-US,en;q=0.9'})
+                            'Accept-Language': 'en-US,en;q=0.9',
+'Accept-Encoding': 'identity'})
     url = SOURCE
     result = {}
     expected = None
