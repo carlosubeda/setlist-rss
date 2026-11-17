@@ -34,6 +34,11 @@ def fetch_all():
     for page in range(200):
         response = session.get(url, timeout=45)
         response.raise_for_status()
+        print("URL:", response.url)
+        print("Estado:", response.status_code)
+        print("Content-Type:", response.headers.get("Content-Type"))
+        print("Content-Encoding:", response.headers.get("Content-Encoding"))
+        print("Inicio:", repr(response.content[:500]))
         soup = BeautifulSoup(response.content, 'html.parser')
         if expected is None:
             for h in soup.find_all('h2'):
