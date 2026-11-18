@@ -1,0 +1,32 @@
+name: Actualizar RSS de conciertos
+on:
+  schedule:
+    - cron: '17 6 * * *' # Diario, 06:17 UTC (07:17/08:17 en Madrid)
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Generar RSS desde setlist.fm
+        env:
+          SETLIST_USER: carlosubeda
+          SETLIST_API_KEY: ${{ secrets.SETLIST_API_KEY }}
+          FEED_BASE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: python3 build_feed.py
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: deployment
+        uses: actions/deploy-pages@v4
